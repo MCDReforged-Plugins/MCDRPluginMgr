@@ -22,16 +22,16 @@ mal = 1
 helpmsg ='''--------MCDR PluginMgr插件--------
 !!pmgr help -帮助信息
 !!pmgr show -展示插件列表
-!!pmgr banshow -展示已禁用的插件列表
+!!pmgr bshow -展示已禁用的插件列表
 !!pmgr r -重载所有插件
-!!pmgr b -禁用除PluginsMgr外的所有插件
-!!pmgr p -启用所有插件
+!!pmgr ball -禁用除PluginsMgr外的所有插件
+!!pmgr pall -启用所有插件
 !!pmgr get [URL] -下载这个插件
 !!pmgr add [path] -从本地位置添加一个插
 !!pmgr ban [name] -禁用一个插件
 !!pmgr pardon [name] -取消禁用一个插件
+!!pmgr del [name] -删除一个插件
 --------------------------------'''
-#!!pmgr del [name] -删除一个插件
 
 def on_load(server, old_module):
     #加载信息
@@ -268,6 +268,24 @@ def on_info(server, info):
                         slash='\ '[0]
                         server.say('§a成功安装插件：§f'+filepath.split(slash)[-1])
                         server.refresh_all_plugins()
+
+    #del
+    if info.is_player == 1:
+        if info.content.startswith('!!pmgr del'):
+            if permission == 1:
+                if(len(info.content.split(' ')) == 1):
+                    server.say('§4未知指令，输入"!!pmgr help"以查看帮助列表')
+                elif(len(info.content.split(' ')) == 2):
+                    server.say('§4未知指令，输入"!!pmgr help"以查看帮助列表')
+                elif(len(info.content.split(' ')) == 3):
+                    filename = info.content.split(' ')[2] + '.py'
+                    path = os.getcwd()+'/plugins/'
+                    if os.path.exists(path+filename):
+                        os.remove(path+filename)
+                        server.refresh_all_plugins()
+                        server.say('§a成功删除插件' + filename + '.py')
+                    else:
+                        server.say('§4未找到文件 '+filename)
 
 #检查文件是否存在
 def search(path,name):
